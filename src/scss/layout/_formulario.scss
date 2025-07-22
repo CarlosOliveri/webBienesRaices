@@ -1,0 +1,48 @@
+@use '../base/variables' as v;
+@use '../base/mixins' as m;
+
+.formulario{
+    fieldset{
+        border: 3px solid v.$gris;
+    
+        p{
+            font-size: 1.4rem;
+            color: v.$grisOscuro;
+        }
+
+        label{
+            font-weight: v.$black;
+            text-transform: uppercase;
+            font-size: 1.3rem;
+            margin-right: 2rem;
+        }
+        
+        .input{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+
+            input, textarea, select{
+                border: 1px solid v.$gris;
+                border-radius: .5rem;
+                padding: .5rem;
+            }
+
+            textarea{
+                height: 15rem;
+            }
+
+            select{
+                -webkit-appearance: none;
+            }
+        }
+
+        .options{
+            display: flex;
+
+            .opcion:last-of-type{
+                margin-left: 2.5rem;
+            }
+        }
+    }
+}
