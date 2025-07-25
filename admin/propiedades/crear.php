@@ -30,7 +30,7 @@
         $imagen = $_FILES['imagen'];
 
         //echo "<pre>";
-        //var_dump($_POST);
+        ///var_dump($imagen);
         //echo "</pre>";
 
         //validación de errores
@@ -58,20 +58,32 @@
         if(!$imagen['name'] || $imagen['error']){
             $errores [] = "Debe añadir una imagen";
         }
-        if($imagen['size'] > 100000){
-            $errores [] = "La imagen es muy pesada, debe pesar menos de 100 kB";   
-
+        if($imagen['size'] > 1000000){
+            $errores [] = "La imagen es muy pesada, debe pesar menos de 1 MB";   
         }
 
         if(empty($errores)){
+
+            //crear carpeta
+            $carpetaImagenes = '../../imagenes/';
+
+            if(!is_dir($carpetaImagenes)){
+                mkdir($carpetaImagenes);
+            }
+            //generar nombre único
+            $nombreImagen = md5( uniqid(rand(),true)) . ".jpg";
+
+            //Subir imagen
+            move_uploaded_file($imagen['tmp_name'],$carpetaImagenes . $nombreImagen);
+            
             //insertar en la base de datos
-            $query = "INSERT INTO propiedades (titulo,precio,descripcion,habitaciones,wc,estacionamientos,creado,vendedores_id) 
-                VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamientos', '$creado', '$vendedor')";
+            $query = "INSERT INTO propiedades (titulo,precio,imagen,descripcion,habitaciones,wc,estacionamientos,creado,vendedores_id) 
+                VALUES ('$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamientos', '$creado', '$vendedor')";
             /* echo $query; */
             $resultado = mysqli_query($db, $query);
             if($resultado){
                 //echo "Insertado correctamente";
-                header('Location: /admin');
+                header('Location: /admin?resultado=1');
             }
 
         }
@@ -94,7 +106,7 @@
             }
         ?>
 
-        <form action="/admin/propiedades/crear.php" class="formulario" method="POST">
+        <form action="/admin/propiedades/crear.php" class="formulario" method="POST" enctype="multipart/form-data">
             <fieldset>
                 <legend>Información General</legend>
                 <div class="input">
@@ -109,7 +121,7 @@
 
                 <div class="input">
                     <label for="imagen">Imagen de la propiedad:</label>
-                    <input accept="image/jpeg image/png" type="file" name="imagen" id="imagen" enctype="multipart/form-data">
+                    <input accept="image/jpeg image/png" type="file" name="imagen" id="imagen" >
                 </div>
 
                 <div class="input">
