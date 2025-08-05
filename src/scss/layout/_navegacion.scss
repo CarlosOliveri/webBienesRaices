@@ -50,7 +50,6 @@
         visibility: visible;
         display: flex;
         flex-direction: row;
-        width: 35rem;
         justify-content: space-between;
         align-items: center;
     }
@@ -61,6 +60,11 @@
         font-size: 1.8rem;
         display: block;
         text-align: center;
+        margin-right: 2rem;
+
+        &:last-of-type{
+            margin-right: 0;
+        }
 
         &:hover{
             color: v.$verde;

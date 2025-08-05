@@ -1,16 +1,41 @@
 <?php
-    require '../includes/funciones.php';
-    require '../includes/config/database.php';
+    require '../includes/app.php';
+    estadoAutenticado();
 
-    incluirTemplate('header');
+    use App\Propiedad;
+    
+    //Implementar un metod para obtener todas las propiedades
+    $propiedades = Propiedad::all();
 
     $resultado = $_GET['resultado'] ?? null;
 
 
-    //Consultar con base de datos para traer las propiedades
-    $db = conectarDB();
-    $query = "SELECT * FROM propiedades;";
-    $resultadoConsulta = mysqli_query($db, $query);
+    //Eliminar Propiedades
+    if($_SERVER["REQUEST_METHOD"] === "POST"){
+        $id = $_POST["id"];
+        $id = filter_var($id, FILTER_VALIDATE_INT);
+
+        if($id){
+            //Eliminar archivo
+            $query = "SELECT imagen FROM propiedades WHERE id = $id;";
+            $resultado = mysqli_query($db,$query);
+            $propiedad = mysqli_fetch_assoc($resultado);
+            unlink("../imagenes/" . $propiedad["imagen"]);
+            echo "<pre>";
+            var_dump($archivo);
+            echo "</pre>";
+
+            //Eliminar propiedad
+            $query = "DELETE FROM propiedades WHERE id = $id;";
+            $resultado = mysqli_query($db,$query);
+            if($resultado){
+                header("location: /admin?resultado=3");
+            } 
+        }
+
+    }
+
+    incluirTemplate('header');
 
 ?>
     <main class="contenedor">
@@ -18,9 +43,11 @@
 
         <?php
             if($resultado == 1){?>
-                <p class="alerta exito">La propiedad ha sido agregada correctamente</p>
+                <p class="alerta exito">La propiedad ha sido Agregada correctamente</p>
             <?php }elseif($resultado == 2){?>
-                <p class="alerta exito">La propiedad ha sido actualizada correctamente</p>
+                <p class="alerta exito">La propiedad ha sido Actualizada correctamente</p>
+            <?php }elseif($resultado == 3){?>
+                <p class="alerta exito">La propiedad ha sido Eliminada correctamente</p>
             <?php }?>
 
         <a href="/admin/propiedades/crear.php" class="boton boton-verde">Nueva Propiedad</a>
@@ -38,15 +65,18 @@
                 <tbody>
                     <?php
                         //Mostrar los resultados
-                        while($propiedades = mysqli_fetch_assoc($resultadoConsulta)){?>
+                        foreach($propiedades as $propiedad ){?>
                             <tr>
-                            <td><?php echo $propiedades['id'] ?></td>
-                            <td><?php echo $propiedades['titulo'] ?></td>
-                            <td><img src="/imagenes/<?php echo $propiedades['imagen'] ?>" class="imagen-tabla" alt="Casa en la playa"></td>
-                            <td>$ <?php echo $propiedades['precio'] ?></td>
+                            <td><?php echo $propiedad->id ?></td>
+                            <td><?php echo $propiedad->titulo ?></td>
+                            <td><img src="/imagenes/<?php echo $propiedad->imagen ?>" class="imagen-tabla" alt="Casa en la playa"></td>
+                            <td>$ <?php echo $propiedad->precio ?></td>
                             <td>
-                                <a href="/admin/propiedades/eliminar.php?id=<?php echo $propiedades['id'] ?>" class="boton-rojo-block">Eliminar</a>
-                                <a href="/admin/propiedades/actualizar.php?id=<?php echo $propiedades['id'] ?>" class="boton-amarillo-block">Editar</a>
+                                <form method="POST" class="w-100">
+                                    <input name="id" type="hidden" value="<?php echo $propiedad->id ?>">
+                                    <input type="submit"  class="boton-rojo-block" value="Eliminar">
+                                </form>
+                                <a href="/admin/propiedades/actualizar.php?id=<?php echo $propiedad->id ?>" class="boton-amarillo-block">Editar</a>
                             </td>
                             </tr>
                     <?php } ?>    
