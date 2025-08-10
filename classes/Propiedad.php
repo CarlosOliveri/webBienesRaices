@@ -26,7 +26,7 @@ class Propiedad{
     }
 
     public function __construct($args = []){
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? null;
         $this->titulo = $args['titulo'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -39,6 +39,44 @@ class Propiedad{
     }
 
     public function guardar(){
+        if(!is_null($this->id)){
+            $this->actualizar();
+        }else{
+            $this->crear();
+        }
+    }
+
+    public function actualizar(){
+        $atributos = $this->sanitizarAtributos();
+        $valores = [];
+        foreach($atributos as $key => $value){
+            if($key === 'id') continue;
+                $valores[] = "{$key} = '$value'";
+        }
+        
+        $query = "UPDATE propiedades SET ";
+        $query .= join(',',array_values($valores));
+        $query .= " WHERE id =" . self::$db->escape_string($this->id);
+
+        $resultado = self::$db->query($query);
+
+        if($resultado){
+            //echo "Insertado correctamente";
+            header('Location: /admin?resultado=2');
+        }
+
+    }
+
+    public function Eliminar(){
+        $query = "SELECT imagen FROM propiedades WHERE id = " . self::$db->scape_string($this->id);
+        $resultado = self::$db->query($query);
+        if($resultado){
+            $this->borrarFoto();
+            header('location: /admin?resultado=3');
+        }
+    }
+
+    public function crear(){
         
         //Sanitizar datos
         $atributos = $this->sanitizarAtributos();
@@ -53,7 +91,10 @@ class Propiedad{
         /* echo $query; */
         $resultado = self::$db->query($query);
 
-        return $resultado;
+        if($resultado){
+            //echo "Insertado correctamente";
+            header('Location: /admin?resultado=1');
+        }
         
     }
 
@@ -113,17 +154,21 @@ class Propiedad{
 
     public function setImagen($imagen){
         //Eliminar Imagen previa
-        if(isset($this->id)){
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-            
-            if($existeArchivo){
-                unlink(CARPETA_IMAGENES . $this->imagen);
-            }
+        if(!is_null($this->id)){
+            $this->borrarFoto();
         }
 
         //Asigna al atributo imagen el nombre de la imagen
         if($imagen){
             $this->imagen = $imagen;
+        }
+    }
+
+    public function borrarFoto(){
+        $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+            
+        if($existeArchivo){
+            unlink(CARPETA_IMAGENES . $this->imagen);
         }
     }
 

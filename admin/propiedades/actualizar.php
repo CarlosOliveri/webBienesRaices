@@ -45,34 +45,9 @@
         }
 
         if(empty($errores)){
-
-        
-            //Hasta aca llegue
-
-            
-            exit;
-            
-            //insertar en la base de datos
-            $query = "UPDATE propiedades SET
-            titulo = '$titulo',
-            precio = '$precio',
-            imagen = '$nombreImagen',
-            descripcion = '$descripcion',
-            habitaciones = $habitaciones,
-            wc = $wc,
-            estacionamientos = $estacionamientos,
-            creado = '$creado',
-            vendedores_id = $vendedor WHERE id = $id";
-
-            //echo $query;
-
-            /* echo $query; */
-            $resultado = mysqli_query($db, $query);
-            if($resultado){
-                //echo "Insertado correctamente";
-                header('Location: /admin?resultado=2');
-            }
-
+            //Actualizar imagen
+            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            $resutado = $propiedad->guardar();
         }
     }
 

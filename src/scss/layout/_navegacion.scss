@@ -60,7 +60,10 @@
         font-size: 1.8rem;
         display: block;
         text-align: center;
-        margin-right: 2rem;
+
+        @include m.tablet{
+            margin-right: 2rem;
+        }
 
         &:last-of-type{
             margin-right: 0;

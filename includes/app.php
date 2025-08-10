@@ -10,4 +10,4 @@
     use App\Propiedad;
     //se guarda la conexion a la base de daros como propiedad en la clase Propiedad
     Propiedad::setDB($db);
-    
+     

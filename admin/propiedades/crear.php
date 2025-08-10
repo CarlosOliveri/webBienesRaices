@@ -11,7 +11,7 @@
     //base de datos
     $db = conectarDB();
 
-    $propiedad = new Propiedad();
+    $propiedad = new Propiedad(); 
 
     $consulta = "SELECT * FROM vendedores";
     $result= mysqli_query($db,$consulta);
@@ -43,12 +43,7 @@
             $imagen->save(CARPETA_IMAGENES . $nombreImagen);
 
             //guardar en la base de datos
-            $resultado = $propiedad->guardar();
-
-            if($resultado){
-                //echo "Insertado correctamente";
-                header('Location: /admin?resultado=1');
-            }
+            $propiedad->guardar();
 
         }
     }

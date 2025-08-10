@@ -67,10 +67,10 @@
                         //Mostrar los resultados
                         foreach($propiedades as $propiedad ){?>
                             <tr>
-                            <td><?php echo $propiedad->id ?></td>
-                            <td><?php echo $propiedad->titulo ?></td>
+                            <td><p><?php echo $propiedad->id ?></p></td>
+                            <td><p><?php echo $propiedad->titulo ?></p></td>
                             <td><img src="/imagenes/<?php echo $propiedad->imagen ?>" class="imagen-tabla" alt="Casa en la playa"></td>
-                            <td>$ <?php echo $propiedad->precio ?></td>
+                            <td><p>$ <?php echo $propiedad->precio ?></p></td>
                             <td>
                                 <form method="POST" class="w-100">
                                     <input name="id" type="hidden" value="<?php echo $propiedad->id ?>">
