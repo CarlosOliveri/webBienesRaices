@@ -46,12 +46,12 @@
 <fieldset>
     <legend>Vendedor</legend>
     <div class="input">
-        <!-- <select name="vendedorId">
+        <select name="propiedad[vendedorId]">
             <option value="">--Seleccione--</option>
             <?php
-                while($row = mysqli_fetch_assoc($result)){?>
-                    <option <?php echo $propiedad->vendedor == $row['id'] ? 'selected' : ''; ?> value="<?php echo sanitizar($propiedad->vendedorId); ?>"><?php echo $row['nombre'] . " " . $row["apellido"]; ?></option>     
+                foreach($vendedores as $vendedor){?>
+                    <option <?php echo $propiedad->vendedorId == $vendedor->id ? 'selected' : ''; ?> value="<?php echo sanitizar($vendedor->id); ?>"><?php echo sanitizar($vendedor->nombre) . " " . sanitizar($vendedor->apellido); ?></option>     
             <?php } ?>
-        </select> -->
+        </select>
     </div>
 </fieldset>

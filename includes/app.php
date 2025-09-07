@@ -7,7 +7,7 @@
     //Se establece una conexion a la base de datos
     $db = conectarDB();
     
-    use App\Propiedad;
+    use App\ActiveRecord;
     //se guarda la conexion a la base de daros como propiedad en la clase Propiedad
-    Propiedad::setDB($db);
+    ActiveRecord::setDB($db);
      

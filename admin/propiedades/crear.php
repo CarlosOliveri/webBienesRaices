@@ -3,21 +3,18 @@
     require '../../includes/app.php';
 
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\Drivers\Gd\Driver;
     use Intervention\Image\ImageManager as image;
 
     $auth = estadoAutenticado();
 
-    //base de datos
-    $db = conectarDB();
 
-    $propiedad = new Propiedad(); 
-
-    $consulta = "SELECT * FROM vendedores";
-    $result= mysqli_query($db,$consulta);
+    $propiedad = new Propiedad();
 
     //arreglo para almacenar errores
     $errores = Propiedad::getErrores();
+    $vendedores = Vendedor::all();
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         

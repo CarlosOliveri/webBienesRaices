@@ -1,6 +1,7 @@
 <?php
 
     use App\Propiedad;
+    use App\Vendedor;
 
     require '../../includes/app.php';
     use Intervention\Image\Drivers\Gd\Driver;
@@ -14,14 +15,8 @@
         header('Location: /admin');
     }
     
-    //base de datos
-    $db = conectarDB();
-    
-    $consultaVendedor = "SELECT * FROM vendedores";
-    $result= mysqli_query($db,$consultaVendedor);
-
-    
     $propiedad = Propiedad::find($id);
+    $vendedores = Vendedor::all();
     
     //arreglo para almacenar errores
     $errores = Propiedad::getErrores();
@@ -45,8 +40,10 @@
         }
 
         if(empty($errores)){
-            //Actualizar imagen
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            if($_FILES['propiedad']['tmp_name']['imagen']){
+                //Actualizar imagen
+                $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            }
             $resutado = $propiedad->guardar();
         }
     }

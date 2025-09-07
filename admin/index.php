@@ -3,9 +3,11 @@
     estadoAutenticado();
 
     use App\Propiedad;
+    use App\Vendedor;
     
     //Implementar un metod para obtener todas las propiedades
     $propiedades = Propiedad::all();
+    $vendedores = Vendedor::all();
 
     $resultado = $_GET['resultado'] ?? null;
 
@@ -41,6 +43,7 @@
     <main class="contenedor">
         <h1>Panel de Administración</h1>
 
+        <h2>Propiedades</h2>
         <?php
             if($resultado == 1){?>
                 <p class="alerta exito">La propiedad ha sido Agregada correctamente</p>
@@ -82,9 +85,50 @@
                     <?php } ?>    
                 </tbody>
         </table>
+
+        <h3>Vendedores</h3>
+
+        <?php
+            if($resultado == 1){?>
+                <p class="alerta exito">La propiedad ha sido Agregada correctamente</p>
+            <?php }elseif($resultado == 2){?>
+                <p class="alerta exito">La propiedad ha sido Actualizada correctamente</p>
+            <?php }elseif($resultado == 3){?>
+                <p class="alerta exito">La propiedad ha sido Eliminada correctamente</p>
+            <?php }?>
+
+        <a href="/admin/vendedores/crear.php" class="boton boton-verde">Nuevo Vendedor</a>
+    
+        <table class="propiedades">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                        //Mostrar los resultados
+                        foreach($vendedores as $vendedor ){?>
+                            <tr>
+                            <td><p><?php echo $vendedor->id ?></p></td>
+                            <td><p><?php echo $vendedor->nombre . " " .  $vendedor->apellido ?></p></td>
+                            <td><p><?php echo $vendedor->telefono ?></p></td>
+                            <td>
+                                <form method="POST" class="w-100">
+                                    <input name="id" type="hidden" value="<?php echo $vendedor->id ?>">
+                                    <input type="submit"  class="boton-rojo-block" value="Eliminar">
+                                </form>
+                                <a href="/admin/vendedores/actualizar.php?id=<?php echo $vendedor->id ?>" class="boton-amarillo-block">Editar</a>
+                            </td>
+                            </tr>
+                    <?php } ?>    
+                </tbody>
+        </table>
     
     </main>
 <?php
-    mysqli_close($db);
     incluirTemplate('footer');
 ?>
